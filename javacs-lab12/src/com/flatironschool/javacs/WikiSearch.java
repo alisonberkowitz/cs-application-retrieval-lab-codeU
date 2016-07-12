@@ -61,7 +61,13 @@ public class WikiSearch {
 	 */
 	public WikiSearch or(WikiSearch that) {
         // FILL THIS IN!
-		return null;
+        Map<String, Integer> res = new HashMap<String, Integer>();
+        res.putAll(that.map);
+        for (Entry<String, Integer> entry: map.entrySet()) {
+        	Integer val = (res.get(entry.getKey()) == null) ? 0 : res.get(entry.getKey());
+			res.put(entry.getKey(), val+entry.getValue());
+		}
+		return new WikiSearch(res);
 	}
 	
 	/**
@@ -72,7 +78,14 @@ public class WikiSearch {
 	 */
 	public WikiSearch and(WikiSearch that) {
         // FILL THIS IN!
-		return null;
+        Map<String, Integer> res = new HashMap<String, Integer>();
+        for (Entry<String, Integer> entry: map.entrySet()) {
+        	Integer val = that.map.get(entry.getKey());
+        	if (val != null) {
+        		res.put(entry.getKey(), val+entry.getValue());
+        	}
+		}
+		return new WikiSearch(res);
 	}
 	
 	/**
@@ -83,7 +96,13 @@ public class WikiSearch {
 	 */
 	public WikiSearch minus(WikiSearch that) {
         // FILL THIS IN!
-		return null;
+		Map<String, Integer> res = new HashMap<String, Integer>();
+        for (Entry<String, Integer> entry: map.entrySet()) {
+        	if (!that.map.containsKey(entry.getKey())) {
+        		res.put(entry.getKey(), entry.getValue());
+        	}
+		}
+		return new WikiSearch(res);
 	}
 	
 	/**
@@ -104,8 +123,15 @@ public class WikiSearch {
 	 * @return List of entries with URL and relevance.
 	 */
 	public List<Entry<String, Integer>> sort() {
-        // FILL THIS IN!
-		return null;
+		List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(map.entrySet());
+		Comparator<Entry<String, Integer>> comparator = new Comparator<Entry<String, Integer>>() {
+            @Override
+            public int compare(Entry<String, Integer> entry1, Entry<String, Integer> entry2) {
+                return (entry1.getValue()).compareTo(entry2.getValue());
+            }
+        };
+        Collections.sort(list, comparator);
+		return list;
 	}
 
 	/**
